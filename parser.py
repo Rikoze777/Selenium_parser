@@ -1,16 +1,19 @@
 import time
 import csv
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from environs import Env
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from random import randint
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 def parse_quotes(url, driver):
+    actions = ActionChains(driver)
+    actions.scroll_by_amount(0, 50).perform()
+    time.sleep(randint(2, 4))
     quotes_list = [["Имя", "Цена"]]
+
     quotes_name = driver.find_elements(by=By.CLASS_NAME, value="symbol-word-break")
     quotes = [quote.text for quote in quotes_name]
     final_prices = driver.find_elements(
@@ -20,6 +23,7 @@ def parse_quotes(url, driver):
     for element, value in enumerate(quotes):
         quote = [value, prices[element]]
         quotes_list.append(quote)
+
     return quotes_list
 
 
@@ -40,20 +44,31 @@ def click_to_market(base_url, driver):
             market_url = driver.current_url
             break
     time.sleep(randint(4, 8))
+
     return market_url
 
 
-def main():
-    env = Env()
-    env.read_env()
-    driver_location = env("DRIVER_LOCATION")
-    binary_location = env("BINARY_LOCATION")
-    base_url = "https://www.nseindia.com/"
+def imitate_user(base_url, driver):
+    wait = WebDriverWait(driver, randint(5, 11))
+    driver.get(base_url)
+    wait.until(EC.url_to_be(base_url))
 
-    options = webdriver.ChromeOptions()
-    options.binary_location = binary_location
-    service = Service(executable_path=driver_location)
-    driver = webdriver.Chrome(service=service, options=options)
+    equity_market = driver.find_element(
+        By.XPATH, "//footer//a[@href='/products-services/about-equity-market']"
+    )
+    print(equity_market)
+    time.sleep(randint(1, 2))
+    actions = ActionChains(driver)
+    actions.scroll_to_element(equity_market).scroll_by_amount(0, 200).perform()
+    time.sleep(randint(4, 8))
+    actions.move_to_element(equity_market).click().perform()
+    time.sleep(randint(4, 8))
+
+
+def main():
+    base_url = "https://www.nseindia.com/"
+    driver = webdriver.Chrome()
+    driver.implicitly_wait(2)
 
     market_url = click_to_market(base_url, driver)
     quotes = parse_quotes(market_url, driver)
@@ -62,6 +77,9 @@ def main():
         writer = csv.writer(file)
         writer.writerows(quotes)
         print("A CSV file named 'quotes.csv' created.")
+
+    imitate_user(base_url, driver)
+    driver.quit()
 
 
 if __name__ == "__main__":
