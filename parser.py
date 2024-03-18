@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from random import randint
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -68,8 +70,8 @@ def imitate_user(base_url, driver):
 
 def main():
     base_url = "https://www.nseindia.com/"
-    driver = webdriver.Chrome()
-    driver.implicitly_wait(2)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    driver.implicitly_wait(5)
 
     market_url = click_to_market(base_url, driver)
     quotes = parse_quotes(market_url, driver)
