@@ -13,3 +13,6 @@ pip install -r requirements.txt
 ```bash
 python3 parser.py
 ```
+
+### Пример работы
+По окончанию работы должен появиться файл 'quotes.csv' в директории. Приведен пример этого [файла](quotes.csv).

@@ -14,10 +14,11 @@ def parse_quotes(url, driver):
     time.sleep(randint(2, 4))
     quotes_list = [["Имя", "Цена"]]
 
-    quotes_name = driver.find_elements(by=By.CLASS_NAME, value="symbol-word-break")
+    quotes_name = driver.find_elements(By.CLASS_NAME, value="symbol-word-break")
     quotes = [quote.text for quote in quotes_name]
     final_prices = driver.find_elements(
-        by=By.XPATH, value="//td[@class='bold text-right']"
+        By.CSS_SELECTOR,
+        value="tbody tr:nth-child(n) td:nth-child(7)",
     )
     prices = [(price.text).replace(",", "") for price in final_prices]
     for element, value in enumerate(quotes):
@@ -52,11 +53,11 @@ def imitate_user(base_url, driver):
     wait = WebDriverWait(driver, randint(5, 11))
     driver.get(base_url)
     wait.until(EC.url_to_be(base_url))
-
     equity_market = driver.find_element(
-        By.XPATH, "//footer//a[@href='/products-services/about-equity-market']"
+        By.CSS_SELECTOR,
+        value="div.col-md-2:nth-child(4) > div:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1)",
     )
-    print(equity_market)
+
     time.sleep(randint(1, 2))
     actions = ActionChains(driver)
     actions.scroll_to_element(equity_market).scroll_by_amount(0, 200).perform()
