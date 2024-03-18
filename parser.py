@@ -52,16 +52,16 @@ def click_to_market(base_url, driver):
 
 
 def imitate_user(base_url, driver):
-    wait = WebDriverWait(driver, randint(5, 11))
-    driver.get(base_url)
-    wait.until(EC.url_to_be(base_url))
+    home_page = driver.find_element(By.ID, "link_0")
+    time.sleep(randint(2, 3))
+    actions = ActionChains(driver)
+    actions.move_to_element(home_page).click().perform()
+    time.sleep(randint(5, 10))
     equity_market = driver.find_element(
         By.CSS_SELECTOR,
-        value="div.col-md-2:nth-child(4) > div:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1)",
+        value="div.col-md-2:nth-child(4) div:nth-child(1) ul:nth-child(2) li:nth-child(1) a:nth-child(1)",
     )
-
     time.sleep(randint(1, 2))
-    actions = ActionChains(driver)
     actions.scroll_to_element(equity_market).scroll_by_amount(0, 200).perform()
     time.sleep(randint(4, 8))
     actions.move_to_element(equity_market).click().perform()
