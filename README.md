@@ -1,6 +1,8 @@
 # Selenium_parser
 
 Парсер данных с сайта `https://www.nseindia.com/`. После сбора данных данный скрипт выполняет дополнительные манипуляции на сайте для имитации пользователя.
+![nseindia](https://github.com/Rikoze777/Selenium_parser/assets/61386361/9fbe914a-00a8-4393-a3ce-2fa37cf4e4f0)
+
 
 ## Установка
 
